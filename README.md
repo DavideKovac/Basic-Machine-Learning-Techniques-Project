@@ -1,5 +1,5 @@
 # Basic-Machine-Learning-Techniques-Project
-A set of project/file developed with different Machine Learning Techniques from the Scikit-learn library
+A set of projects developed with different Machine Learning Techniques from the Scikit-learn library
 
 <h1><b>Machine Learning Techniques</b></h1>
 
