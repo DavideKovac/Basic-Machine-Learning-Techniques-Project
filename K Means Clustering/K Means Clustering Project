@@ -1,0 +1,125 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # K Means Clustering Project 
+# It is very important to note, we actually have the labels for this data set, but we will NOT use them for the KMeans clustering algorithm, since that is an unsupervised learning algorithm.
+#
+#The Data
+# 
+# We will use a data frame with 777 observations on the following 18 variables.
+# * Private A factor with levels No and Yes indicating private or public university
+# * Apps Number of applications received
+# * Accept Number of applications accepted
+# * Enroll Number of new students enrolled
+# * Top10perc Pct. new students from top 10% of H.S. class
+# * Top25perc Pct. new students from top 25% of H.S. class
+# * F.Undergrad Number of fulltime undergraduates
+# * P.Undergrad Number of parttime undergraduates
+# * Outstate Out-of-state tuition
+# * Room.Board Room and board costs
+# * Books Estimated book costs
+# * Personal Estimated personal spending
+# * PhD Pct. of faculty with Ph.D.’s
+# * Terminal Pct. of faculty with terminal degree
+# * S.F.Ratio Student/faculty ratio
+# * perc.alumni Pct. alumni who donate
+# * Expend Instructional expenditure per student
+# * Grad.Rate Graduation rate
+
+#Import the libraries needed
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+sns.set_style('whitegrid')
+import matplotlib.pyplot as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+#Get the data
+
+df=pd.read_csv('College_Data',index_col=0)
+
+
+#Check the dataset info
+
+
+df.head()
+
+df.info()
+
+df.describe()
+
+
+
+#Data Analysis 
+#Scatterplot of Grad.Rate versus Room.Board where the points are colored by the Private column. **
+
+sns.lmplot(x='Room.Board',y='Grad.Rate',data=df,hue='Private',size=6,aspect=1,fit_reg=False)
+
+#Scatterplot of F.Undergrad versus Outstate where the points are colored by the Private column.**
+
+sns.lmplot(x='Outstate',y='F.Undergrad',data=df,hue='Private',size=6,aspect=1,fit_reg=False)
+
+
+#Histogram showing Out of State Tuition based on the Private column.
+
+g = sns.FacetGrid(df,hue="Private",palette='coolwarm',size=6,aspect=2)
+g = g.map(plt.hist,'Outstate',bins=20,alpha=0.7)
+
+
+#Histogram for the Grad.Rate column.**
+
+g = sns.FacetGrid(df,hue="Private",palette='coolwarm',size=6,aspect=2)
+g = g.map(plt.hist,'Grad.Rate',bins=20,alpha=0.7)
+
+#Fix the grad rate that is more then 100
+
+df['Grad.Rate'].idxmax()
+
+#Change the Grad rate to 100
+
+df.loc[df['Grad.Rate']>100,'Grad.Rate']=100
+
+
+# Check the plot again to see if the problem was fixed
+
+g = sns.FacetGrid(df,hue="Private",palette='coolwarm',size=6,aspect=2)
+g = g.map(plt.hist,'Grad.Rate',bins=20,alpha=0.7)
+
+
+#Creation K cluster labels
+
+from sklearn.cluster import KMeans
+
+#We know that the model want to be divided in two clusters (Private and Public)
+
+kmodel=KMeans(n_clusters=2)
+
+
+#Train the model,drop the column with the "solution" 
+
+x=df.drop('Private',axis=1)
+kmodel.fit(x)
+
+
+#Find the cluster center 
+
+kmodel.cluster_centers_
+
+
+# Evaluation
+#This would not really be possible in a real life scenario, since the solution wouldn be there
+
+def is_private(x):
+    if x=='Yes':
+        return 1
+    else:
+        return 0
+    
+df['Cluster']=df['Private'].apply(lambda x:is_private(x))
+df.head()
+
+
+from sklearn.metrics import confusion_matrix,classification_report
+print(confusion_matrix(df['Cluster'],kmodel.labels_))
+print(classification_report(df['Cluster'],kmodel.labels_))

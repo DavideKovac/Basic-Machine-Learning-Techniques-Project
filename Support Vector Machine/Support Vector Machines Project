@@ -1,0 +1,140 @@
+ #!/usr/bin/env python
+# coding: utf-8
+
+# Support Vector Machines Project 
+# The Data
+# For this project will use the  famous Iris flower data set(http://en.wikipedia.org/wiki/Iris_flower_data_set). 
+# 
+# The Iris flower data set or Fisher's Iris data set is a multivariate data set introduced by Sir Ronald Fisher in the 1936 as an example of discriminant analysis. 
+# 
+# The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor), so 150 total samples. Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters.
+# 
+# Here's a picture of the three different Iris types:
+
+# In[1]:
+
+
+# The Iris Setosa
+from IPython.display import Image
+url = 'http://upload.wikimedia.org/wikipedia/commons/5/56/Kosaciec_szczecinkowaty_Iris_setosa.jpg'
+Image(url,width=300, height=300)
+
+
+# In[2]:
+
+
+# The Iris Versicolor
+from IPython.display import Image
+url = 'http://upload.wikimedia.org/wikipedia/commons/4/41/Iris_versicolor_3.jpg'
+Image(url,width=300, height=300)
+
+
+# In[3]:
+
+
+# The Iris Virginica
+from IPython.display import Image
+url = 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Iris_virginica.jpg'
+Image(url,width=300, height=300)
+
+
+# The iris dataset contains measurements for 150 iris flowers from three different species.
+# 
+# The three classes in the Iris dataset:
+# 
+#     Iris-setosa (n=50)
+#     Iris-versicolor (n=50)
+#     Iris-virginica (n=50)
+# 
+# The four features of the Iris dataset:
+# 
+#     sepal length in cm
+#     sepal width in cm
+#     petal length in cm
+#     petal width in cm
+# 
+
+
+#import and load the dataset
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+sns.set_style('whitegrid')
+iris=sns.load_dataset('iris')
+iris.head()
+
+#Pairplot of the flowers divided by species
+
+sns.pairplot(iris,hue='species',palette='Dark2')
+
+
+#Kde plot of sepal_length versus sepal width for setosa species of flower.**
+
+setosa = iris[iris['species']=='setosa']
+sns.jointplot(x='sepal_width',y='sepal_length',data=setosa,kind='kde')
+
+
+
+sns.kdeplot( setosa['sepal_width'], setosa['sepal_length'],
+                 cmap="plasma", shade=True, shade_lowest=False)
+
+
+#Splitting of the data 
+
+from sklearn.model_selection import train_test_split
+x=iris.drop(['species'],axis=1)
+y=iris['species']
+
+X_train,X_test,y_train,y_test=train_test_split(x,y,train_size=0.3)
+
+#Create and train the SVM model
+
+from sklearn.svm import SVC
+
+model=SVC()
+
+model.fit(X_train,y_train)
+
+
+#Model Evaluation and prediction
+
+pred=model.predict(X_test)
+
+from sklearn.metrics import classification_report,confusion_matrix
+print(confusion_matrix(y_test,pred))
+print(classification_report(y_test,pred))
+
+
+#Find best values for model using grid search
+
+
+from sklearn.model_selection import GridSearchCV
+
+
+#Creating a dictionary called param_grid with param for c and gamma
+
+
+param_grid={'C':[0.1,1,10,100],'gamma':[1,0.1,0.01,0.001]}
+
+#Create the grid model and fit the data
+
+grid=GridSearchCV(SVC(),param_grid,verbose=3,refit=True)
+grid.fit(X_train,y_train)
+
+
+#Find best_estimator and best_paramaters
+
+grid.best_estimator_
+
+grid.best_params_
+
+#Prediction and evaluation
+
+grid_pred=grid.predict(X_test)
+
+print(confusion_matrix(y_test,grid_pred))
+
+print(classification_report(y_test,grid_pred))
+
+#The result at the end are very similar anyway

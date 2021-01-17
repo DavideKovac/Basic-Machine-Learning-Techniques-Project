@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+#K Nearest Neighbors Project 
+# 
+#The data are just artificially created  
+
+#Import some libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+#Get the data
+
+df=pd.read_csv('KNN_Project_Data')
+
+
+#Check the head of the dataframe.
+
+df.head()
+
+#Data Analysis
+
+#pair plot with the hue of the Target Class
+
+sns.pairplot(df,hue='TARGET CLASS')
+
+#Standardization of the data
+
+from sklearn.preprocessing import StandardScaler
+
+scaler=StandardScaler()
+
+#Fit the scaler droppin the result column
+
+scaler.fit(df.drop('TARGET CLASS',axis=1))
+
+#transform the data
+
+scaled_version=scaler.transform(df.drop('TARGET CLASS',axis=1))
+
+#Create a new dataframe with the scaled data
+
+df_scaled=pd.DataFrame(scaled_version,columns=df.columns[:-1])
+df_scaled.head()
+
+#Divide the data in x and y
+
+from sklearn.model_selection import train_test_split
+x=df_scaled
+y=df['TARGET CLASS']
+
+#Divide the data into train and test (30/70)
+
+X_train,x_test,Y_train,y_test=train_test_split(x,y,test_size=0.3)
+
+#create and fit the K neighbors model
+
+from sklearn.neighbors import KNeighborsClassifier
+
+knn=KNeighborsClassifier(n_neighbors=1)
+
+knn.fit(X_train,Y_train)
+
+#prediction of the trained model
+
+pred=knn.predict(x_test)
+
+#Evaluation of the knn model
+
+from sklearn.metrics import classification_report,confusion_matrix
+
+print(confusion_matrix(y_test,pred))
+
+print(classification_report(y_test,pred))
+
+#Use the elbow method to find the best possible k value
+
+error_rate=[]
+
+for i in range(1,40):
+    knn=KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train,Y_train)
+    pred_i=knn.predict(x_test)
+    error_rate.append(np.mean(pred_i != y_test))
+
+
+#Create the Plot that show which k has the less error rate
+
+plt.figure(figsize=(12,4))
+plt.plot(range(1,40),error_rate)
+
+#finding the precise index of this k(k is going to be index+1)
+index_min=np.argmin(error_rate)
+index_min
+
+
+#Retrain the model with teh better K
+
+
+knn=KNeighborsClassifier(n_neighbors=16)
+knn.fit(X_train,Y_train)
+pred=knn.predict(x_test)
+print(classification_report(y_test,pred))
+
+
