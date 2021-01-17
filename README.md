@@ -5,7 +5,7 @@ A set of project/file developed with different Machine Learning Techniques from 
 
 <h2><b>Supervised Learnings</b></h2>(Supervised learning is the machine learning task of learning a function that maps an input to an output based on example input-output pairs. It infers a function from labeled training data consisting of a set of training examples.)
 
-
+<p></p>
 -<b>Linear regression</b> = Linear Regression is a supervised machine learning algorithm where the predicted output is continuous and has a constant slope. It’s used to predict values within a continuous range, (e.g. sales, price) rather than trying to classify them into categories (e.g. cat, dog).
 
 -<b>Logistic regression</b> = Logistic regression is a suprevised classification machine learning  algorithm used to assign observations to a discrete set of classes. Some of the examples of classification problems are Email spam or not spam, Online transactions Fraud or not Fraud, Tumor Malignant or Benign. Logistic regression transforms its output using the logistic sigmoid function to return a probability value. There are two type of logistic regression: Binary (eg. Tumor Malignant or Benign) and Multi-linear functions failsClass (eg. Cats, dogs or Sheep's)
@@ -18,6 +18,7 @@ A set of project/file developed with different Machine Learning Techniques from 
 
 <h2><b>Unsupervised Learning</b></h2>(Unsupervised learning is a type of machine learning that utilizes a data set with no pre-existing labels with a minimum of human supervision, often for the purpose of searching for previously undetected patterns)
 
+<p></p>
 
 -<b>K Means Clustering</b>: he objective of K-means is simple: group similar data points together and discover underlying patterns. To achieve this objective, K-means looks for a fixed number (k) of clusters in a dataset.A cluster refers to a collection of data points aggregated together because of certain similarities.You’ll define a target number k, which refers to the number of centroids you need in the dataset. A centroid is the imaginary or real location representing the center of the cluster.
 
